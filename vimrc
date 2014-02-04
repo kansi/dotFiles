@@ -1,21 +1,21 @@
 
-" __/\\\________/\\\__/\\\\\\\\\\\__/\\\\____________/\\\\____/\\\\\\\\\____________/\\\\\\\\\_        
-"  _\/\\\_______\/\\\_\/////\\\///__\/\\\\\\________/\\\\\\__/\\\///////\\\_______/\\\////////__       
-"   _\//\\\______/\\\______\/\\\_____\/\\\//\\\____/\\\//\\\_\/\\\_____\/\\\_____/\\\/___________      
-"    __\//\\\____/\\\_______\/\\\_____\/\\\\///\\\/\\\/_\/\\\_\/\\\\\\\\\\\/_____/\\\_____________     
-"     ___\//\\\__/\\\________\/\\\_____\/\\\__\///\\\/___\/\\\_\/\\\//////\\\____\/\\\_____________    
-"      ____\//\\\/\\\_________\/\\\_____\/\\\____\///_____\/\\\_\/\\\____\//\\\___\//\\\____________   
-"       _____\//\\\\\__________\/\\\_____\/\\\_____________\/\\\_\/\\\_____\//\\\___\///\\\__________  
-"        ______\//\\\________/\\\\\\\\\\\_\/\\\_____________\/\\\_\/\\\______\//\\\____\////\\\\\\\\\_ 
+" __/\\\________/\\\__/\\\\\\\\\\\__/\\\\____________/\\\\____/\\\\\\\\\____________/\\\\\\\\\_
+"  _\/\\\_______\/\\\_\/////\\\///__\/\\\\\\________/\\\\\\__/\\\///////\\\_______/\\\////////__
+"   _\//\\\______/\\\______\/\\\_____\/\\\//\\\____/\\\//\\\_\/\\\_____\/\\\_____/\\\/___________
+"    __\//\\\____/\\\_______\/\\\_____\/\\\\///\\\/\\\/_\/\\\_\/\\\\\\\\\\\/_____/\\\_____________
+"     ___\//\\\__/\\\________\/\\\_____\/\\\__\///\\\/___\/\\\_\/\\\//////\\\____\/\\\_____________
+"      ____\//\\\/\\\_________\/\\\_____\/\\\____\///_____\/\\\_\/\\\____\//\\\___\//\\\____________
+"       _____\//\\\\\__________\/\\\_____\/\\\_____________\/\\\_\/\\\_____\//\\\___\///\\\__________
+"        ______\//\\\________/\\\\\\\\\\\_\/\\\_____________\/\\\_\/\\\______\//\\\____\////\\\\\\\\\_
 "         _______\///________\///////////__\///______________\///__\///________\///________\/////////__
 "
-"                                                        
-"    _|      _|  _|_|_|  _|      _|  _|_|_|      _|_|_|  
-"    _|      _|    _|    _|_|  _|_|  _|    _|  _|        
-"    _|      _|    _|    _|  _|  _|  _|_|_|    _|        
-"      _|  _|      _|    _|      _|  _|    _|  _|        
-"        _|      _|_|_|  _|      _|  _|    _|    _|_|_|  
-"                                                        
+"
+"    _|      _|  _|_|_|  _|      _|  _|_|_|      _|_|_|
+"    _|      _|    _|    _|_|  _|_|  _|    _|  _|
+"    _|      _|    _|    _|  _|  _|  _|_|_|    _|
+"      _|  _|      _|    _|      _|  _|    _|  _|
+"        _|      _|_|_|  _|      _|  _|    _|    _|_|_|
+"
 
 
 "" Pathogen ---------------------------------------------------------{{{
@@ -27,10 +27,11 @@ filetype plugin indent on
 "" }}}
 "" Basic options ----------------------------------------------------{{{
 let mapleader = ","
+let erlang_folding=1
 set encoding=utf-8
 set nocompatible
 set nu
-set wrap
+"set wrap
 set autoindent
 set cindent
 set smartindent
@@ -51,7 +52,7 @@ set smartcase                                       " Show case search if i type
 set incsearch                                       " move the cursor to the matched string, while typing the search pattern
 set showmatch
 set hlsearch
-set gdefault
+"set gdefault
 "set modifiable                                      "for nerd tree, to modify files and dirs in nerd tree
 " recent commnet to stop nerdtree from loading
 "autocmd VimEnter * NERDTree                         "start nerdtree with every instace of vim
@@ -61,7 +62,6 @@ set gdefault
 "au VimEnter * NERDTreeFind                         "Highlights the current editing file in the tree but only when we open
 "autocmd VimEnter * wincmd w                        "auto focus on the buffer when enter a file
 "let g:nerdtree_tabs_smart_startup_focus = 2
-"autocmd BufEnter * lcd %:p:h
 
 autocmd VimEnter * wincmd l                         "auto focus on the current buffer
 set whichwrap+=<,>,h,l,[,]                          "atuomatically move to the next line when reached the eol
@@ -75,18 +75,17 @@ set showbreak=↪
 set splitbelow                                      "open the new split window on the right
 set splitright                                      "open the new split window on the right
 "with this enabled we can specify the synax for a file in the file itsef by: "vi: syntax=apache"
-set modeline                        
+"set modeline
 
 au FocusLost * :silent! wall                        "Save when losing focus
-au VimResized * :wincmd =                           "Resize splits when the window is resized    
+au VimResized * :wincmd =                           "Resize splits when the window is resized
 
 au BufNewFile,BufRead *.escript set filetype=erlang
-au BufNewFile,BufRead *.app.src set filetype=erlang
-au BufNewFile,BufRead *.app set filetype=erlang
-au BufNewFile,BufRead *.appup set filetype=erlang
 au BufNewFile,BufRead *.erl set filetype=erlang
+"au BufNewFile,BufRead *.app.src set filetype=erlang
+"au BufNewFile,BufRead *.app set filetype=erlang
+"au BufNewFile,BufRead *.appup set filetype=erlang
 
-let g:goldenview__enable_at_startup = 0
 " }}}
 "" Focus options ----------------------------------------------------{{{
 "" Make sure Vim returns to the same line when you reopen a file.{{{
@@ -100,14 +99,14 @@ augroup END
 " }}}
 "" Autofocus on the filename of the file in the current buffer------{{{
 " returns true iff is NERDTree open/active
-function! rc:isNTOpen() 
+function! rc:isNTOpen()
   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 endfunction
 
 " returns true iff focused window is NERDTree window
-function! rc:isNTFocused()     
-  return -1 != match(expand('%'), 'NERD_Tree') 
-endfunction 
+function! rc:isNTFocused()
+  return -1 != match(expand('%'), 'NERD_Tree')
+endfunction
 
 " calls NERDTreeFind iff NERDTree is active, current window contains a modifiable file, and we're not in vimdiff
 function! rc:syncTree()
@@ -120,22 +119,7 @@ endfunction
 autocmd BufEnter * call rc:syncTree()
 " }}}
 "" Syntax highlighting and colorscheme ------------------------------{{{
-" Show syntax highlighting groups for word under cursor
-nmap <C-S-P> :call <SID>SynStack()<CR>
-function! <SID>SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-
-"colorscheme Mustang_Vim_Colorscheme_by_hcalves
-"let g:rehash256 = 1
-"colorscheme molokai
-"colorscheme  badwolf
-"colorscheme  gummybears
 colorscheme  github
-"colorscheme  skittles_berry
 "" }}}
 "" Powerline and python mode ----------------------------------------{{{
 set rtp+=~/.vim/bundle/vundle/
@@ -147,38 +131,34 @@ Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'klen/python-mode'
 " }}}
 "" Vim key Bindings -------------------------------------------------{{{
-"map  <C-l> :tabn<CR>
-"map  <C-h> :tabp<CR>
-"map  <C-n> :tabnew<CR>
+" Maps ESC to jj
+inoremap jj <Esc>
+inoremap JJ <Esc>
 
 "" map CTRL-E to end-of-line (insert mode)
-imap <C-e> <esc>$i<right>
+"imap <C-e> <esc>$i<right>
 "" map CTRL-A to beginning-of-line (insert mode)
 " imap <C-a> <esc>0i
-"" save document 
-imap <C-d> <esc>:w<CR>
-nmap <C-d> :w<CR>
+"" save document
+"imap <C-d> <esc>:w<CR>
+nmap <C-j> :w<CR>
 
-" map CTRL-b to the back of a word [default vim binding is E]
-" imap <C-b> <esc>ea
 " map ,ne to toggle nerdtree
 nmap <leader>ne :NERDTreeToggle<cr>
 " change size of the split window
 nmap <C-Left> <C-w>>
 nmap <C-Right> <C-w><
 
-" move in inset mode
-inoremap <C-h> <C-o>h
-"inoremap <C-j> <C-o>j
-"inoremap <C-k> <C-o>k
-inoremap <C-l> <C-o>l
+" stop using arrow keys
+imap <left> <nop>
+imap <right> <nop>
 
 " maps to the first character of the line
 imap <C-f> <esc>^i
 "" Switch between split screens or nerdtree
 " nnoremap <C-w> <C-w>w
 """""""""cut copy paste from system clipboard""""""""""
-vmap <C-c> "+yi
+vmap <C-c> "+y
 vmap <C-x> "+c
 vmap <C-v> c<ESC>"+p
 imap <C-v> <ESC>"+pa
@@ -201,7 +181,7 @@ vmap <C-c><C-c> :SlimuxREPLSendSelection<CR>
 
 "" }}}
 "" Search -----------------------------------------------------------{{{
-"Clear mathes 
+"Clear mathes
 noremap <silent> <leader><space> :noh<cr>:call clearmatches()<cr>
 " Keep search matches in the middle of the window.
 nnoremap n nzzzv
@@ -227,7 +207,7 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 nnoremap <Space> za
 vnoremap <Space> za
 " open all folds
-nnoremap <c-i> zR   
+"nnoremap <c-i> zR
 " Clean trailing whitespace
 nnoremap <leader>w mz:%s/\s\+$//<cr>:let @/=''<cr>`z
 " close all folds
@@ -368,25 +348,43 @@ command! -bang WQ wq<bang>
 set completeopt=menuone,longest                         "enable dropdown menu in jedi and omnicomplete
 autocmd FileType python set completeopt-=preview        "disable window split into pydoc
 "set completeopt-=preview                                "diable window split
-" Since UltiSnips pass the tab key is there is no match 
+" Since UltiSnips pass the tab key is there is no match
 " we then use superTab to invoke YouCompleteMe
 let g:ycm_complete_in_comments = 1
 let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
 let g:SuperTabDefaultCompletionType = '<C-Tab>'
 let g:ycm_extra_conf_globlist = ['~/*']
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" UltiSnips completion function that tries to expand a snippet. If there's no
+" snippet for expanding, it checks for completion window and if it's
+" shown, selects first element. If there's no completion window it tries to
+" jump to next placeholder. If there's no placeholder it just returns TAB key 
+" {{{
+function! g:UltiSnips_Complete()
+    call UltiSnips_ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips_JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
+" }}}
+au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsListSnippets="<c-e>"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 set wildmenu
 set wildmode=list:longest,full
 let g:jedi#popup_on_dot = 0
 " let g:jedi#popup_select_first = 0   "select the first suggestions from the popup
-
-"--------------onmicomplete for other languages-----------------------------"
-" autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-" autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-" autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-" autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
-" autocmd FileType php set omnifunc=phpcomplete#CompletePHP
-" autocmd FileType c set omnifunc=ccomplete#Complete
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "}}}
@@ -429,7 +427,7 @@ nnoremap <leader>I :call IndentGuides()<cr>
 "nmap <silent> <c-h> :wincmd h<CR>
 "nmap <silent> <c-l> :wincmd l<CR>
  "" }}}
-"" Powerline setup --------------------------------------------------{{{ 
+"" Powerline setup --------------------------------------------------{{{
 " set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim/
 " Use 256 colours (Use this setting only if your terminal supports 256 colours)
 set t_Co=256
