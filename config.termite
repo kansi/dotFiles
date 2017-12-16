@@ -1,9 +1,10 @@
 [options]
 
-font = Tamsyn 11 
+font = Misc Tamsyn 11 
+#font = Profont 11
+allow_bold = true
 audible_bell = false
 mouse_autohide = false
-allow_bold = true
 dynamic_title = true
 clickable_url = true
 scrollback_lines = 10000
