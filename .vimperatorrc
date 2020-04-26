@@ -1,9 +1,0 @@
-set hintchars="asdfghjklut"
-set noscrollbars
-set scroll=5
-set focuscontent
-set gui=nonavigation
-
-hi ContentSeparator border-top: none;
-hi CmdLine -append font-size:12px
-hi CompDesc -append font-size:12px

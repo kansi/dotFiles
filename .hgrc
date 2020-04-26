@@ -1,8 +1,0 @@
-#ssh = ssh -C
-
-[extensions]
-prompt=/home/kansi/bin/hg-prompt/prompt.py
-
-[ui]
-username = Vanshdeep Singh <kansi13@yahoo.in>
-#ssh = ssh -i ~/.ssh/id_rsa
