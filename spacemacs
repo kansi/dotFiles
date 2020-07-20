@@ -31,21 +31,24 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
+     (lsp :variables lsp-rust-server 'rust-analyzer)
+     unicode-fonts
+     rust
+     html
+     javascript
+     python
      helm
      auto-completion
      better-defaults
      emacs-lisp
      git
      markdown
-     org
+     (org :variables org-enable-reveal-js-support t)
      elixir
      erlang
+     go
      yaml
+     docker
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -57,12 +60,17 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(gotham-theme
+
+   dotspacemacs-additional-packages '(monokai-alt-theme
+                                      gotham-theme
+                                      plantuml-mode
+                                      win-switch
+                                      org-roam
                                       all-the-icons)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(undo-tree)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -130,15 +138,17 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(gotham
+   dotspacemacs-themes '(monokai-alt
+                         gotham
                          spacemacs-dark
-                         spacemacs-light)
+                         spacemacs-light
+                         )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Iosevka"
-                               :size 34
+                               :size 24
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -305,7 +315,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  )
+)
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -314,15 +324,60 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+  ;; https://www.gnu.org/software/emacs/manual/html_node/efaq/Replacing-highlighted-text.html
+  (delete-selection-mode t)
+
   (setq neo-theme 'icons)
   (setq neo-show-hidden-files nil)
   (setq neo-window-fixed-size nil)
 
+  (setq plantuml-default-exec-mode 'jar)
+  (setq plantuml-jar-path "~/.local/bin/plantuml.jar")
+
+  ;; org config
+  ;; Enable #+BIND
+  (setq org-export-allow-bind-keywords t)
+  ;; Ensure #+begin_src blocks have tabs working like in major mode of the language
+  (setq org-src-tab-acts-natively t)
+  ;; require publish module
+  (require 'ox-publish)
+
+  ;; reset cache before publishing blog
+  (defun publish-blog ()
+    (interactive)
+    (org-publish-remove-all-timestamps)
+    (org-publish-all))
+
+  (global-set-key (kbd "C-x C-p") 'publish-blog)
+
   (global-set-key "\M-n" 'beginning-of-line-text)
   (global-set-key "\C-s" 'helm-swoop)
+  (global-undo-tree-mode -1)
 
-  (add-hook 'elixir-mode-hook
-            (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+  ;; something changed
+  (setq org-directory "~/org")
+  (setq org-default-notes-file (concat org-directory "/notes/capture.org"))
+  (setq org-roam-directory "~/org/knowledge/")
+
+  ;; Elixir setup
+  (add-hook 'elixir-mode-hook (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+
+  (setq-default prettify-symbols-alist
+        '(("->" . 8594)
+          ("=>" . 8658)
+          ("<=" . 8804)
+          (">=" . 8805)
+          ("<-" . 8592)
+          ("|>". 9655)
+          ("!=" . 8800)))
+
+  (add-hook 'elixir-mode-hook 'prettify-symbols-mode)
+  (add-hook 'rust-mode-hook 'prettify-symbols-mode)
+
+  ;; https://www.emacswiki.org/emacs/WinSwitch
+  ;; (require 'win-switch)
+  (win-switch-setup-keys-ijkl "\C-xo")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -334,6 +389,24 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(custom-safe-themes
+   (quote
+    ("7e5d400035eea68343be6830f3de7b8ce5e75f7ac7b8337b5df492d023ee8483" "9089d25e2a77e6044b4a97a2b9fe0c82351a19fdd3e68a885f40f86bbe3b3900" "643b4d181b6afa4306d65db76889d8b987e095ae8f262a4c71dd5669d39c9b09" "c19e5291471680e72d8bd98f8d6e84f781754a9e8fc089536cda3f0b7c3550e3" default)))
+ '(evil-want-Y-yank-to-eol nil)
+ '(org-html-text-markup-alist
+   (quote
+    ((bold . "<b>%s</b>")
+     (code . "<code>%s</code>")
+     (italic . "<i>%s</i>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<kbd>%s</kbd>"))))
  '(package-selected-packages
    (quote
-    (all-the-icons memoize yaml-mode unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download ob-elixir mwim mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-mix flycheck-credo flycheck evil-magit magit git-commit with-editor transient erlang company-statistics auto-yasnippet yasnippet alchemist company elixir-mode ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (win-switch kaolin-light-theme autothemer kaolin-themes leuven-theme org-roam toml-mode racer pos-tip cargo rust-mode ox-reveal plantuml-mode gotham-theme lsp-mode eglot direnv web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data darkokai-theme monokai-theme monokai-alt-theme monokai-pro-theme poet-dark-theme olivetti poet-theme web-beautify livid-mode skewer-mode simple-httpd js2-refactor multiple-cursors js2-mode js-doc coffee-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic dockerfile-mode docker tablist json-mode docker-tramp json-snatcher json-reformat go-guru go-eldoc company-go go-mode all-the-icons memoize yaml-mode unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download ob-elixir mwim mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-mix flycheck-credo flycheck evil-magit magit git-commit with-editor transient erlang company-statistics auto-yasnippet yasnippet alchemist company elixir-mode ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((((class color) (min-colors 89)) (:background "#262626" :foreground "#f8f8f2")))))

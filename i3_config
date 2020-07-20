@@ -21,7 +21,7 @@ bindsym $mod+n border normal
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font xft:URWGothic-Book 2
+font xft:URWGothic-Book 1
 
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
@@ -33,7 +33,7 @@ bindsym $mod+Return exec terminal
 bindsym $mod+Shift+q kill
 
 # start program launcher
-bindsym $mod+d exec --no-startup-id rofi -show run -font \"Iosevka 24\"
+bindsym $mod+d exec --no-startup-id rofi -show run -font \"Iosevka 18\"
 
 # launch categorized menu
 bindsym $mod+z exec --no-startup-id morc_menu
@@ -273,7 +273,7 @@ mode "resize" {
 bindsym $mod+9 exec --no-startup-id blurlock
 
 # set 
-exec --no-startup-id xrandr --output eDP1 --scale 1.50x1.50
+# exec --no-startup-id xrandr --output eDP1 --scale 1.0x1.0
 
 # Autostart applications
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -284,11 +284,11 @@ exec --no-startup-id xfce4-power-manager
 exec --no-startup-id pamac-tray
 exec --no-startup-id clipit
 exec --no-startup-id setxkbmap -option ctrl:nocaps
-# exec --no-startup-id blueman-applet
+exec --no-startup-id blueman-applet
 # exec_always --no-startup-id sbxkb
 exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -time 10 -locker blurlock
+# exec --no-startup-id xautolock -time 10 -locker blurlock
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 
